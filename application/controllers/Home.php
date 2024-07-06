@@ -38,6 +38,46 @@ class Home extends CI_Controller {
     $this->load->view('layout/footer');
   }
 
+  public function detailJson() {
+      // $this->db->select('operator, xs, s, m, l, xl, xxl, qty, destination');
+      // $this->db->from('tbl_operator');
+      // $this->db->order_by('id', 'DESC');
+      // $var = $this->db->get()->result();
+
+      // $data = array();
+      // foreach ($var as $key => $v) {
+      //     $data[] = array(
+      //         'operator' => $v->operator,
+      //         'xs' => $v->xs,
+      //         's' => $v->s,
+      //         'm' => $v->m,
+      //         'l' => $v->l,
+      //         'xl' => $v->xl,
+      //         'xxl' => $v->xxl,
+      //         'qty' => $v->qty,
+      //         'destination' => $v->destination
+      //     );
+      // }
+
+      $data = array();
+      for ($i = 0; $i < 5; $i++) {
+          $data[] = array(
+              'operator' => 'diky anwar',
+              'xs' => 'punya',
+              's' => 'punya',
+              'm' => 'punya',
+              'l' => 'punya',
+              'xl' => 'punya',
+              'xxl' => 'punya',
+              'qty' => 'punya',
+              'destination' => 'punya',
+          );
+      }
+      echo json_encode($data);
+  }
+
+
+
   public function add() {
     $data = [
       'title' => 'Tambah Customer',
