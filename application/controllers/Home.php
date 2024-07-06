@@ -20,28 +20,21 @@ class Home extends CI_Controller {
   }
 
   public function index() {
-    $submit = $this->input->post('find');
-    if($submit) {
-      $start_date = $this->input->post('start_date');
-      $end_date = $this->input->post('end_date');
-      $show = $this->model->db_customer($start_date, $end_date);
-    } else {
-      $start_date = date('Y-m-01');
-      $end_date = date('Y-m-t');
-      $show = '';
-    }
+    $this->db->select('a.TrnDate, a.StyleCode, GROUP_CONCAT(a.SizeName) AS SizeName, SUM(a.QtyOutput) AS QtyOutput');
+    $this->db->from('lygsewingoutput AS a');
+    $this->db->group_by(['a.TrnDate', 'a.StyleCode']);
+    $show = $this->db->get()->result();
 
-    $data = [
-      'start_date' => $start_date,
-      'end_date' => $end_date,
-      'data' => $show,
-      'title' => 'Data Customer',
-    ];
+     $data = [
+       'data' => $show,
+       'title' => 'Sewing',
+     ];
+
     $this->load->view('layout/header', $data);
     $this->load->view('layout/modul');
     $this->load->view('layout/menu');
     $this->load->view('layout/breadcrumb');
-    $this->load->view('customer/index', $data);
+    $this->load->view('home/index', $data);
     $this->load->view('layout/footer');
   }
 
