@@ -20,10 +20,19 @@ class Home extends CI_Controller {
   }
 
   public function index() {
-    $this->db->select('a.TrnDate, a.StyleCode, GROUP_CONCAT(a.SizeName) AS SizeName, SUM(a.QtyOutput) AS QtyOutput');
-    $this->db->from('lygsewingoutput AS a');
-    $this->db->group_by(['a.TrnDate', 'a.StyleCode']);
-    $show = $this->db->get()->result();
+    $this->db->select('a.TrnDate, a.StyleCode,
+
+    (SELECT COUNT(DISTINCT sub.SizeName)
+     FROM lygsewingoutput AS sub
+     WHERE sub.TrnDate = a.TrnDate
+     AND sub.SizeName IN (\'S\', \'XS\', \'L\', \'XL\', \'XXL\')) AS SizeCount,
+
+     SUM(a.QtyOutput) AS QtyOutput');
+
+     $this->db->from('lygsewingoutput AS a');
+     $this->db->group_by(['a.TrnDate', 'a.StyleCode']);
+     $show = $this->db->get()->result();
+
 
      $data = [
        'data' => $show,
@@ -44,32 +53,33 @@ class Home extends CI_Controller {
   SELECT
     TrnDate AS date,
     OperatorName AS operator,
-    (SELECT COUNT(*)
+
+    (SELECT COUNT(SizeName)
      FROM lygsewingoutput AS sub
      WHERE sub.OperatorName = lyg.OperatorName
      AND sub.SizeName = 'S') AS s,
 
-    (SELECT COUNT(*)
+    (SELECT COUNT(SizeName)
      FROM lygsewingoutput AS sub
      WHERE sub.OperatorName = lyg.OperatorName
      AND sub.SizeName = 'XS') AS xs,
 
-    (SELECT COUNT(*)
+    (SELECT COUNT(SizeName)
      FROM lygsewingoutput AS sub
      WHERE sub.OperatorName = lyg.OperatorName
      AND sub.SizeName = 'L') AS l,
 
-    (SELECT COUNT(*)
+    (SELECT COUNT(SizeName)
      FROM lygsewingoutput AS sub
      WHERE sub.OperatorName = lyg.OperatorName
      AND sub.SizeName = 'XL') AS xl,
 
-    (SELECT COUNT(*)
+    (SELECT COUNT(SizeName)
      FROM lygsewingoutput AS sub
      WHERE sub.OperatorName = lyg.OperatorName
      AND sub.SizeName = 'XXL') AS xxl,
 
-    (SELECT COUNT(*)
+    (SELECT COUNT(SizeName)
      FROM lygsewingoutput AS sub
      WHERE sub.OperatorName = lyg.OperatorName
      AND sub.SizeName IN ('S', 'XS', 'L', 'XL', 'XXL')) AS qty,

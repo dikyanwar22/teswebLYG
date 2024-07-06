@@ -29,7 +29,7 @@
           <tr>
             <td><?= $val->TrnDate; ?></td>
             <td><?= $val->StyleCode; ?></td>
-            <td><?= $val->SizeName; ?></td>
+            <td><?= $val->SizeCount; ?></td>
             <td><?= $val->QtyOutput; ?></td>
             <td>
               <a href="#" data-date="<?= $val->TrnDate; ?>" class="btn btn-primary btn-sm show-detail"><i class="fa fa-search"></i></a>
