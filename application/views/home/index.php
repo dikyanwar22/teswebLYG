@@ -50,14 +50,13 @@
           <thead>
             <tr>
               <th rowspan="2" class="text-center">Operator</th>
-              <th colspan="6" class="text-center">Size</th>
+              <th colspan="5" class="text-center">Size</th>
               <th rowspan="2" class="text-center">Total QTY</th>
               <th rowspan="2" class="text-center">Destination</th>
             </tr>
             <tr>
               <th>XS</th>
               <th>S</th>
-              <th>M</th>
               <th>L</th>
               <th>XL</th>
               <th>XXL</th>
@@ -93,15 +92,14 @@
           data.forEach(item => {
             html += `
               <tr>
-                <td>${item.operator}</td>
+                <td>${item.operator} ( ${item.date} )</td>
                 <td>${item.xs}</td>
                 <td>${item.s}</td>
-                <td>${item.m}</td>
                 <td>${item.l}</td>
                 <td>${item.xl}</td>
                 <td>${item.xxl}</td>
-                <td>${item.qty}</td>
-                <td>${item.destination}</td>
+                <td class="text-center">${item.qty}</td>
+                <td class="text-center">${item.destination}</td>
               </tr>
             `;
           });

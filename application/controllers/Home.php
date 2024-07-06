@@ -39,42 +39,70 @@ class Home extends CI_Controller {
   }
 
   public function detailJson() {
-      // $this->db->select('operator, xs, s, m, l, xl, xxl, qty, destination');
-      // $this->db->from('tbl_operator');
-      // $this->db->order_by('id', 'DESC');
-      // $var = $this->db->get()->result();
+  $dateData = $this->input->get('date');
+  $sql = "
+  SELECT
+    TrnDate AS date,
+    OperatorName AS operator,
+    (SELECT COUNT(*)
+     FROM lygsewingoutput AS sub
+     WHERE sub.OperatorName = lyg.OperatorName
+     AND sub.SizeName = 'S') AS s,
 
-      // $data = array();
-      // foreach ($var as $key => $v) {
-      //     $data[] = array(
-      //         'operator' => $v->operator,
-      //         'xs' => $v->xs,
-      //         's' => $v->s,
-      //         'm' => $v->m,
-      //         'l' => $v->l,
-      //         'xl' => $v->xl,
-      //         'xxl' => $v->xxl,
-      //         'qty' => $v->qty,
-      //         'destination' => $v->destination
-      //     );
-      // }
+    (SELECT COUNT(*)
+     FROM lygsewingoutput AS sub
+     WHERE sub.OperatorName = lyg.OperatorName
+     AND sub.SizeName = 'XS') AS xs,
 
-      $data = array();
-      for ($i = 0; $i < 5; $i++) {
-          $data[] = array(
-              'operator' => 'diky anwar',
-              'xs' => 'punya',
-              's' => 'punya',
-              'm' => 'punya',
-              'l' => 'punya',
-              'xl' => 'punya',
-              'xxl' => 'punya',
-              'qty' => 'punya',
-              'destination' => 'punya',
-          );
-      }
-      echo json_encode($data);
+    (SELECT COUNT(*)
+     FROM lygsewingoutput AS sub
+     WHERE sub.OperatorName = lyg.OperatorName
+     AND sub.SizeName = 'L') AS l,
+
+    (SELECT COUNT(*)
+     FROM lygsewingoutput AS sub
+     WHERE sub.OperatorName = lyg.OperatorName
+     AND sub.SizeName = 'XL') AS xl,
+
+    (SELECT COUNT(*)
+     FROM lygsewingoutput AS sub
+     WHERE sub.OperatorName = lyg.OperatorName
+     AND sub.SizeName = 'XXL') AS xxl,
+
+    (SELECT COUNT(*)
+     FROM lygsewingoutput AS sub
+     WHERE sub.OperatorName = lyg.OperatorName
+     AND sub.SizeName IN ('S', 'XS', 'L', 'XL', 'XXL')) AS qty,
+
+    DestinationCode AS destination
+  FROM
+    lygsewingoutput AS lyg
+  WHERE
+    TrnDate = '$dateData'
+  GROUP BY
+    OperatorName, DestinationCode
+  ";
+
+  $query = $this->db->query($sql);
+  $data = $query->result();
+
+  $result = array();
+  foreach ($data as $v) {
+      $result[] = array(
+          'date' => $v->date,
+          'operator' => $v->operator,
+          'xs' => $v->xs,
+          's' => $v->s,
+          'l' => $v->l,
+          'xl' => $v->xl,
+          'xxl' => $v->xxl,
+          'qty' => $v->qty,
+          'destination' => $v->destination
+      );
   }
+  echo json_encode($result);
+}
+
 
 
 
